@@ -69,7 +69,7 @@ immutable "images" in layers, with the ability to fork off CoW instances on a wh
 and do all of this without being tied to a particular container engine.
 
 ## Usage
-
+```
 usage: stacko <command> [<args>]
 
 Image commands:
@@ -98,3 +98,4 @@ StackPoint commands:
     umount-stackpoint
     get-stackpoint-dir
     is-stackpoint-mounted
+```
