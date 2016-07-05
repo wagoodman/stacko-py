@@ -7,7 +7,7 @@ instances are usable at a named "stackpoint", which always points to an instance
 Eventually you can cutover a stackpoint to a new instance and fallback to a
 previous instance without copying or destroying files.
 
-Note: this is a work in progress, so it is not stable or finished yet.
+<b><i>Note: this is a work in progress, so it is not stable or finished yet.</i></b>
 
 ## Dependencies
 This package requires the following packages to function:
