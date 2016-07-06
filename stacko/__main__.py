@@ -69,7 +69,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.pointManager.newPoint(args.pointname, args.imagename)
-        print('Created point: pointname=%s imagename=%s' % (repr(args.pointname), repr(args.imagename)))
+        print('Created point: pointname={0!s} imagename={1!s}'.format(repr(args.pointname), repr(args.imagename)))
 
     def list_stackpoints(self, startArg=2):
         parser = argparse.ArgumentParser(
@@ -88,7 +88,7 @@ StackPoint commands:
         mountDir = self.pointManager.mount(args.pointname)
         if mountDir:
             mountDir = os.path.abspath(mountDir)
-            print('Mounted stackpoint: name=%s\nmount-point=%s' % (repr(args.pointname), repr(mountDir)))
+            print('Mounted stackpoint: name={0!s}\nmount-point={1!s}'.format(repr(args.pointname), repr(mountDir)))
 
     def umount_stackpoint(self, startArg=2):
         parser = argparse.ArgumentParser(
@@ -106,7 +106,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.pointManager.newPointInstance(args.pointname, args.imagename)
-        print('Created point instance: pointname=%s imagename=%s' % (repr(args.pointname), repr(args.imagename)))
+        print('Created point instance: pointname={0!s} imagename={1!s}'.format(repr(args.pointname), repr(args.imagename)))
 
     # TEMP TEMP TEMP
     def set_stackpoint_instance(self, startArg=2):
@@ -116,7 +116,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.pointManager.setPointInstance(args.pointname, args.imagename)
-        print('Set point instance: pointname=%s imagename=%s' % (repr(args.pointname), repr(args.imagename)))
+        print('Set point instance: pointname={0!s} imagename={1!s}'.format(repr(args.pointname), repr(args.imagename)))
 
 
     # TEMP TEMP TEMP
@@ -127,7 +127,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.pointManager.deletePointInstance(args.pointname, args.imagename)
-        print('Deleted point instance: pointname=%s imagename=%s' % (repr(args.pointname), repr(args.imagename)))
+        print('Deleted point instance: pointname={0!s} imagename={1!s}'.format(repr(args.pointname), repr(args.imagename)))
 
 
     # Image Commands
@@ -138,7 +138,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.imageManager.newImage(args.name, args.parent)
-        print('Added image: name=%s parent=%s' % (repr(args.name), repr(args.parent)))
+        print('Added image: name={0!s} parent={1!s}'.format(repr(args.name), repr(args.parent)))
 
     def delete_image(self, startArg=2):
         parser = argparse.ArgumentParser(description='Delete an existing image')
@@ -146,7 +146,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.imageManager.deleteImage(args.name)
-        print('Deleted image: name=%s ' % (repr(args.name),) )
+        print('Deleted image: name={0!s} '.format(repr(args.name)) )
 
     def edit_image(self, startArg=2):
         parser = argparse.ArgumentParser(description='Mount an image')
@@ -160,7 +160,7 @@ StackPoint commands:
 
         mountDir = self.imageManager.mountImage(args.name, not args.read_only)
         mountDir = os.path.abspath(mountDir)
-        print('Mount image: name=%s read-only=%s\nmount-point=%s' % (repr(args.name), repr(args.read_only), repr(mountDir)))
+        print('Mount image: name={0!s} read-only={1!s}\nmount-point={2!s}'.format(repr(args.name), repr(args.read_only), repr(mountDir)))
 
     def close_image(self, startArg=2):
         parser = argparse.ArgumentParser(description='Mount an image')
@@ -172,7 +172,7 @@ StackPoint commands:
             sys.exit(1)
 
         self.imageManager.umountImage(args.name)
-        print('Umount image: name=%s ' % (repr(args.name), ))
+        print('Umount image: name={0!s} '.format(repr(args.name) ))
 
     def list_images(self, startArg=2):
         parser = argparse.ArgumentParser(
@@ -200,7 +200,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.imageManager.newImageInstance(args.imagename, args.pointname)
-        print('Added instnace: name=%s point=%s' % (repr(args.imagename), repr(args.pointname)))
+        print('Added instnace: name={0!s} point={1!s}'.format(repr(args.imagename), repr(args.pointname)))
 
     # TEMP TEMP TEMP
     def delete_instance(self, startArg=2):
@@ -210,7 +210,7 @@ StackPoint commands:
         args = parser.parse_args(sys.argv[startArg:])
 
         self.imageManager.deleteImageInstance(args.imagename, args.pointname)
-        print('Deleted instance: name=%s point=%s' % (repr(args.imagename), repr(args.pointname)))
+        print('Deleted instance: name={0!s} point={1!s}'.format(repr(args.imagename), repr(args.pointname)))
 
 
     """
@@ -252,6 +252,6 @@ def main():
         imageManager.to_db()
         pointManager.to_db()
     except error.StacksException as e:
-        print("Error:\n\t%s"%str(e))
+        print("Error:\n\t{0!s}".format(str(e)))
 
 main()
