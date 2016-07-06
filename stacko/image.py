@@ -204,7 +204,7 @@ class ImageManager(classDb.ClassDb):
         if self.legacy:
             depth = 0
             parent = imageObj.parent
-            while parent != None:
+            while parent is not None:
                 depth += 1
                 parent = self.db[name].parent
 
@@ -264,7 +264,7 @@ class ImageManager(classDb.ClassDb):
         lowerDir = [currentImageContent]
 
         parentName = imageObj.parent
-        while parentName != None:
+        while parentName is not None:
 
             parentObj = self.db[parentName]
             parentInstanceDir = self.getInstancesDir(parentObj, self.ownInstance)
@@ -335,7 +335,7 @@ class ImageManager(classDb.ClassDb):
         lowerDir = None
 
         # mount the necessary parent images, then mount the parent instance to .self
-        if imageObj.parent != None:
+        if imageObj.parent is not None:
             if instanceName == self.ownInstance:
                 self.mountImage(imageObj.parent, writable=False)
 
@@ -459,8 +459,8 @@ class ImageManager(classDb.ClassDb):
 
     def listImages(self, tree=False):
         if tree:
-            roots = [name for name, obj in list(self.db.items()) if obj.parent == None]
-            parentNodes = set([obj.parent for name, obj in list(self.db.items()) if obj.parent != None])
+            roots = [name for name, obj in list(self.db.items()) if obj.parent is None]
+            parentNodes = set([obj.parent for name, obj in list(self.db.items()) if obj.parent is not None])
 
             def printTree(node, padding, isLast=False):
 
