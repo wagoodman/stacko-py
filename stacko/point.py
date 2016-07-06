@@ -25,7 +25,7 @@ class PointManager(classDb.ClassDb):
         super(PointManager, self).__init__(*args, **kwargs)
         self.mountDir = kwargs['mountDir']
         if len(self.mountDir.strip()) <= 5:
-            raise RuntimeError("Unexpected dirname: %s" % repr(self.mountDir))
+            raise RuntimeError("Unexpected dirname: {0!s}".format(repr(self.mountDir)))
 
         self.imageManager = kwargs['imageManager']
 
@@ -37,25 +37,25 @@ class PointManager(classDb.ClassDb):
         elif isinstance(obj, Point):
             instanceDir = os.path.join(self.mountDir, obj.currentImage)
         else:
-            raise RuntimeError("Invalid input given: %s" % repr(obj))
+            raise RuntimeError("Invalid input given: {0!s}".format(repr(obj)))
         return instanceDir
 
     def newPoint(self, pointName, imageName):
         # validate input against the manifest
         if pointName in self.db:
-            raise error.StacksException("Point already exists: %s" % str(pointName))
+            raise error.StacksException("Point already exists: {0!s}".format(str(pointName)))
         if imageName not in self.imageManager.db.keys():
-            raise error.StacksException("Image does not exist: %s" % str(imageName))
+            raise error.StacksException("Image does not exist: {0!s}".format(str(imageName)))
 
         # check if the instance dir is already taken (for some reason)
         instanceDir = self.imageManager.getInstancesDir(imageName, pointName)
         if os.path.exists(instanceDir):
-            raise error.StacksException("Manifest mismatch. Instance directory already exists: %s" % str(instanceDir))
+            raise error.StacksException("Manifest mismatch. Instance directory already exists: {0!s}".format(str(instanceDir)))
 
         # ensure the mount point does not already exist
         mountPointDir = self.getMountPointDir(pointName)
         if os.path.exists(mountPointDir):
-            raise error.StacksException("Manifest mismatch. Mount point already exists: %s" % str(mountPointDir))
+            raise error.StacksException("Manifest mismatch. Mount point already exists: {0!s}".format(str(mountPointDir)))
 
         # create a new mount point directory
         os.mkdir(mountPointDir)
@@ -72,12 +72,12 @@ class PointManager(classDb.ClassDb):
     def setPointInstance(self, pointName, imageName):
         # validate input against the manifest
         if pointName not in self.db:
-            raise error.StacksException("Point does not exist: %s" % str(pointName))
+            raise error.StacksException("Point does not exist: {0!s}".format(str(pointName)))
 
         pointObj = self.db[pointName]
 
         if imageName not in pointObj.imageHistory:
-            raise error.StacksException("Point instance does not exist: %s" % str(imageName))
+            raise error.StacksException("Point instance does not exist: {0!s}".format(str(imageName)))
 
         # ensure the image instance directory exists?
         # TODO... maybe?
@@ -87,7 +87,7 @@ class PointManager(classDb.ClassDb):
     def newPointInstance(self, pointName, imageName):
         # validate input against the manifest
         if pointName not in self.db:
-            raise error.StacksException("Point does not exist: %s" % str(pointName))
+            raise error.StacksException("Point does not exist: {0!s}".format(str(pointName)))
 
         pointObj = self.db[pointName]
 
@@ -100,7 +100,7 @@ class PointManager(classDb.ClassDb):
     def deletePointInstance(self, pointName, imageName):
         # validate input against the manifest
         if pointName not in self.db:
-            raise error.StacksException("Point does not exist: %s" % str(pointName))
+            raise error.StacksException("Point does not exist: {0!s}".format(str(pointName)))
 
         pointObj = self.db[pointName]
 
@@ -109,7 +109,7 @@ class PointManager(classDb.ClassDb):
         # not be possible. A simplification of this is to ensure that the
         # current image instance cannot be deleted
         if imageName == pointObj.currentImage:
-            raise error.StacksException("Cannot delete the Point's main instance, cutover to another instance before deleting: point=%s image=%s" % (pointName,imageName))
+            raise error.StacksException("Cannot delete the Point's main instance, cutover to another instance before deleting: point={0!s} image={1!s}".format(pointName, imageName))
 
         # delete the instance of the given image and associate with the point
         # and remove from operational history (otherwise fallbacks will fail)
@@ -120,7 +120,7 @@ class PointManager(classDb.ClassDb):
     def mount(self, pointName):
         # validate input against the manifest
         if pointName not in self.db:
-            raise error.StacksException("Point does not exist: %s" % str(pointName))
+            raise error.StacksException("Point does not exist: {0!s}".format(str(pointName)))
 
         pointObj = self.db[pointName]
         imageName = pointObj.currentImage
@@ -143,7 +143,7 @@ class PointManager(classDb.ClassDb):
     def umount(self, pointName):
         # validate input against the manifest
         if pointName not in self.db:
-            raise error.StacksException("Point does not exist: %s" % str(pointName))
+            raise error.StacksException("Point does not exist: {0!s}".format(str(pointName)))
 
         pointObj = self.db[pointName]
         imageName = pointObj.currentImage
@@ -159,7 +159,7 @@ class PointManager(classDb.ClassDb):
 
         def showPoint(name):
             pointObj = self.db[name]
-            print("%s:"%name)
+            print("{0!s}:".format(name))
             imagesWithThisPointInstance = self.imageManager.getImagesWithInstanceName(name)
             for idx, imageObj in enumerate(sorted(imagesWithThisPointInstance)):
                 isLast = idx == len(imagesWithThisPointInstance) - 1

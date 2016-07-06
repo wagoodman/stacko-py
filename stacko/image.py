@@ -40,7 +40,7 @@ class ImageManager(classDb.ClassDb):
         self.imagesDir = kwargs['imagesDir']
 
         if len(self.imagesDir.strip()) <= 5:
-            raise RuntimeError("Unexpected dirname: %s" % repr(self.imagesDir))
+            raise RuntimeError("Unexpected dirname: {0!s}".format(repr(self.imagesDir)))
 
         if 'legacy' in kwargs:
             # allow forcing legacy behavior (for testing and general compatibility)
@@ -58,20 +58,20 @@ class ImageManager(classDb.ClassDb):
     def newImage(self, name, parent):
         # validate input against the manifest
         if name in self.db:
-            raise error.StacksException("Image name already exists: %s" % str(name))
+            raise error.StacksException("Image name already exists: {0!s}".format(str(name)))
         if parent is not None and parent not in self.db:
-            raise error.StacksException("Parent does not exist: %s" % str(parent))
+            raise error.StacksException("Parent does not exist: {0!s}".format(str(parent)))
 
         # check if the image dirs exist for the parent node
         if parent is not None:
             parentDir = self.getImageDir(parent)
             if not os.path.exists(parentDir):
-                raise error.StacksException("Parent image directory does not exist: %s" % str(parentDir))
+                raise error.StacksException("Parent image directory does not exist: {0!s}".format(str(parentDir)))
 
         # ensure the node path does not exist already (for some reason)
         imageDir = self.getImageDir(name)
         if os.path.exists(imageDir):
-            raise error.StacksException("Manifest mismatch. Image directory already exists: %s" % str(imageDir))
+            raise error.StacksException("Manifest mismatch. Image directory already exists: {0!s}".format(str(imageDir)))
 
         # create a new node directories and update the manifest
         os.mkdir(imageDir)
@@ -83,7 +83,7 @@ class ImageManager(classDb.ClassDb):
     def deleteImage(self, name):
         # validate input against the manifest
         if name not in self.db:
-            raise error.StacksException("Image does not exist: %s" % str(name))
+            raise error.StacksException("Image does not exist: {0!s}".format(str(name)))
 
         imageObj = self.db[name]
         children = self.getChildImages(name)
@@ -91,12 +91,12 @@ class ImageManager(classDb.ClassDb):
         # check if the image dirs exist for the parent node
         if len(children) > 0:
             childrenStr = ", ".join([ obj.name for obj in children ])
-            raise error.StacksException("Image is supporting other images: %s" % childrenStr)
+            raise error.StacksException("Image is supporting other images: {0!s}".format(childrenStr))
 
         # ensure there are no instantiations of this image
         if len(imageObj.instances) > 0:
             instancesStr = ", ".join(imageObj.instances)
-            raise error.StacksException("Cannot delete an image that supports other instances: %s" % instancesStr)
+            raise error.StacksException("Cannot delete an image that supports other instances: {0!s}".format(instancesStr))
         else:
             # double check to see the instance dir is really empty
             instancesDirLs = os.listdir(self.getInstancesDir(name))
@@ -115,7 +115,7 @@ class ImageManager(classDb.ClassDb):
 
         if len(instancesInUse) > 0:
             instanceStr = ", ".join(instancesInUse)
-            raise error.StacksException("Cannot delete an image that supports other mounted instances: %s" % instanceStr)
+            raise error.StacksException("Cannot delete an image that supports other mounted instances: {0!s}".format(instanceStr))
 
         instanceMountDir = os.path.join( self.getInstancesDir(imageObj, self.ownInstance),
                                          "mount")
@@ -136,22 +136,22 @@ class ImageManager(classDb.ClassDb):
     def newImageInstance(self, name, instanceName, force=False):
         # validate input against the manifest
         if name not in self.db:
-            raise error.StacksException("Image name does not exist: %s" % str(name))
+            raise error.StacksException("Image name does not exist: {0!s}".format(str(name)))
 
         imageObj = self.db[name]
 
         # ensure the manifest does not already have that instance instantiated
         if instanceName in imageObj.instances:
-            raise error.StacksException("Image instance already exists: %s" % str(instanceName))
+            raise error.StacksException("Image instance already exists: {0!s}".format(str(instanceName)))
 
         # special case, don't allow creating a new "own" instance
         if force == False and instanceName == self.ownInstance:
-            raise error.StacksException("Cannot modify internal instance: %s" % str(instanceName))
+            raise error.StacksException("Cannot modify internal instance: {0!s}".format(str(instanceName)))
 
         # ensure the node path does not exist already (for some reason)
         instanceDir = self.getInstancesDir(imageObj, instanceName)
         if os.path.exists(instanceDir):
-            raise error.StacksException("Manifest mismatch. Image instance directory already exists: %s" % str(instanceDir))
+            raise error.StacksException("Manifest mismatch. Image instance directory already exists: {0!s}".format(str(instanceDir)))
 
         # create a new instance directories and update the manifest
         os.mkdir(instanceDir)
@@ -166,24 +166,24 @@ class ImageManager(classDb.ClassDb):
     def deleteImageInstance(self, name, instanceName, force=False):
         # validate input against the manifest
         if name not in self.db:
-            raise error.StacksException("Image does not exist: %s" % str(name))
+            raise error.StacksException("Image does not exist: {0!s}".format(str(name)))
 
         imageObj = self.db[name]
 
         # validate input against the manifest
         if instanceName not in imageObj.instances:
-            raise error.StacksException("Image instance does not exist: %s" % str(instanceName))
+            raise error.StacksException("Image instance does not exist: {0!s}".format(str(instanceName)))
 
         # special case, don't allow deletion a new "own" instance
         if force == False and instanceName == self.ownInstance:
-            raise error.StacksException("Cannot modify internal instance: %s" % str(instanceName))
+            raise error.StacksException("Cannot modify internal instance: {0!s}".format(str(instanceName)))
 
         instanceDir = self.getInstancesDir(name, instanceName)
 
         # Ensure there are no active mounts for this instance
         instanceMountDir = os.path.join( instanceDir, "mount")
         if overlayUtils.isMounted(instanceMountDir):
-            raise error.StacksException("Cannot delete a mounted instances: %s" % instanceName)
+            raise error.StacksException("Cannot delete a mounted instances: {0!s}".format(instanceName))
 
         # remove the image directory
         shutil.rmtree(instanceDir)
@@ -193,12 +193,12 @@ class ImageManager(classDb.ClassDb):
 
         # validate input against the manifest
         if name not in self.db:
-            raise error.StacksException("Image does not exist: %s" % str(name))
+            raise error.StacksException("Image does not exist: {0!s}".format(str(name)))
 
         imageObj = self.db[name]
 
         if instanceName not in imageObj.instances and instanceName != self.ownInstance:
-            raise error.StacksException("Image instance does not exist: image=%s instance=%s" % (repr(name),repr(instanceName)))
+            raise error.StacksException("Image instance does not exist: image={0!s} instance={1!s}".format(repr(name), repr(instanceName)))
 
         # two different strategies can be used based on the kernel version
         if self.legacy:
@@ -220,7 +220,7 @@ class ImageManager(classDb.ClassDb):
 
         # validate input against the manifest
         if name not in self.db:
-            raise error.StacksException("Image does not exist: %s" % str(name))
+            raise error.StacksException("Image does not exist: {0!s}".format(str(name)))
 
         # two different strategies can be used based on the kernel version
         if self.legacy:
@@ -276,8 +276,7 @@ class ImageManager(classDb.ClassDb):
             parentName = parentObj.parent
 
         if verbose:
-            print("Mounting:\n\tmount: %s\n\tupper: %s\n\tlower: %s\n" % \
-                    (os.path.abspath(mountDir),
+            print("Mounting:\n\tmount: {0!s}\n\tupper: {1!s}\n\tlower: {2!s}\n".format(os.path.abspath(mountDir),
                     os.path.abspath(upperDir),
                     repr(lowerDir)))
 
@@ -348,8 +347,7 @@ class ImageManager(classDb.ClassDb):
                 lowerDir = os.path.join( ownInstanceDir, "mount")
 
             if verbose:
-                print("Mounting:\n\tmount: %s\n\tupper: %s\n\tlower: %s\n" % \
-                        (os.path.abspath(mountDir),
+                print("Mounting:\n\tmount: {0!s}\n\tupper: {1!s}\n\tlower: {2!s}\n".format(os.path.abspath(mountDir),
                         os.path.abspath(upperDir),
                         os.path.abspath(lowerDir)))
 
@@ -371,8 +369,7 @@ class ImageManager(classDb.ClassDb):
             #subwrap.run(['umount', mountDir ])
 
             if verbose:
-                print("Binding:\n\tmount: %s\n\source: %s\n" % \
-                        (os.path.abspath(mountDir),
+                print("Binding:\n\tmount: {0!s}\n\source: {1!s}\n".format(os.path.abspath(mountDir),
                         os.path.abspath(upperDir)))
 
             # perform a bind mount to the contents dir
@@ -398,7 +395,7 @@ class ImageManager(classDb.ClassDb):
 
             if len(childrenInUse) > 0:
                 childrenStr = ", ".join([ obj.name for obj in childrenInUse ])
-                raise error.StacksException("Cannot unmount an image that supports other mounted images: %s" % childrenStr)
+                raise error.StacksException("Cannot unmount an image that supports other mounted images: {0!s}".format(childrenStr))
 
             # ensure there are no instances being supported by this image currently mounted
             instancesInUse = []
@@ -410,7 +407,7 @@ class ImageManager(classDb.ClassDb):
 
             if len(instancesInUse) > 0:
                 instanceStr = ", ".join(instancesInUse)
-                raise error.StacksException("Cannot unmount an image that supports other mounted instances: %s" % instanceStr)
+                raise error.StacksException("Cannot unmount an image that supports other mounted instances: {0!s}".format(instanceStr))
 
         # ensure the image is not already mounted, if so, assume the remaining
         # parents are already mounted (as we will be unable to mount them
@@ -426,7 +423,7 @@ class ImageManager(classDb.ClassDb):
         elif isinstance(obj, Image):
             imageDir = os.path.join(self.imagesDir, obj.name)
         else:
-            raise RuntimeError("Invalid input given: %s" % repr(obj))
+            raise RuntimeError("Invalid input given: {0!s}".format(repr(obj)))
         return imageDir
 
     def getContentDir(self, obj, instanceName=ownInstance):
@@ -452,7 +449,7 @@ class ImageManager(classDb.ClassDb):
             return [item for node, item in list(self.db.items()) if item.parent == obj]
         elif isinstance(obj, Image):
             return [item for node, item in list(self.db.items()) if item.parent == obj.name]
-        raise RuntimeError("Invalid input given: %s" % repr(obj))
+        raise RuntimeError("Invalid input given: {0!s}".format(repr(obj)))
 
     def getImagesWithInstanceName(self, instanceName):
         return [item for node, item in list(self.db.items()) if instanceName in item.instances]
@@ -497,7 +494,7 @@ class ImageManager(classDb.ClassDb):
 
         def showInstances(name):
             imageObj = self.db[name]
-            print("%s:"%name)
+            print("{0!s}:".format(name))
             for idx, instance in enumerate(imageObj.instances):
                 isLast = idx == len(imageObj.instances) - 1
                 if isLast:
