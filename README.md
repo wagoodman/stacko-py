@@ -1,3 +1,5 @@
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/5feefd32004b424eaaaa8152dbbbea78/badge.svg)](https://www.quantifiedcode.com/app/project/5feefd32004b424eaaaa8152dbbbea78)
+
 # Stacko
 This is a overlayFS manager that provides 'stacking' functionalities similar
 to Docker images, but not tied specifically to a container solution. With Stacko
