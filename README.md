@@ -9,8 +9,10 @@ instances are usable at a named "stackpoint", which always points to an instance
 Eventually you can cutover a stackpoint to a new instance and fallback to a
 previous instance without copying or destroying files.
 
-<b><i>Note: this is a work in progress, so it is not stable or finished yet.</i></b>
-
+<b><i>Note: ~~this is a work in progress, so it is not stable or finished yet.~~
+This was a weekend project, which was successful! However, it appears there is a more
+promising alternative to Stacko named Siren: https://github.com/LEW21/siren .</i></b>
+ 
 ## Dependencies
 This package requires the following packages to function:
 - https://github.com/wagoodman/overlayUtils
